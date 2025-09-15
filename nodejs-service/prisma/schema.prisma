@@ -1,0 +1,52 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Voter {
+  voter_id  Int     @id @unique @default(autoincrement())
+  name      String
+  age       Int
+  has_voted Boolean
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  votes Vote[]
+
+  @@map("users")
+}
+
+model Candidate {
+  candidate_id Int    @id @unique @default(autoincrement())
+  name         String
+  party        String
+  votes_count  Int    @default(0)
+
+  votes Vote[]
+}
+
+model Vote {
+  vote_id      Int @id @unique @default(autoincrement())
+  voter_id     Int
+  candidate_id Int
+  weight       Int @default(1)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  voter     Voter     @relation(fields: [voter_id], references: [voter_id])
+  candidate Candidate @relation(fields: [candidate_id], references: [candidate_id])
+
+  @@map("votes")
+}
