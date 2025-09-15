@@ -6,3 +6,4 @@ npm-debug.log
 /generated/prisma
 main.exe
 *.log
+go.sum
