@@ -11,8 +11,7 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - DB_URL=postgresql://neondb_owner:npg_RCKnZ94HUIzV@ep-round-bar-a1pyj7b4-pooler.ap-southeast-1.aws.neon.tech/hack-the-ai?sslmode=require&channel_binding=require
-      - SERVER_PORT=8080
+      DATABASE_URL: "postgresql://neondb_owner:npg_RCKnZ94HUIzV@ep-round-bar-a1pyj7b4-pooler.ap-southeast-1.aws.neon.tech/hack-the-ai?sslmode=require&channel_binding=require"
     networks:
       - saracen-network
     volumes:
