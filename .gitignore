@@ -7,3 +7,4 @@ npm-debug.log
 main.exe
 *.log
 go.sum
+.git/
