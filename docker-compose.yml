@@ -31,13 +31,15 @@ services:
       - GOLANG_API_URL=http://golang-service:8080
       - DATABASE_URL=postgresql://neondb_owner:npg_RCKnZ94HUIzV@ep-round-bar-a1pyj7b4-pooler.ap-southeast-1.aws.neon.tech/hack-the-ai?sslmode=require&channel_binding=require
     volumes:
-      - .:/app
+      - ./nodejs-service:/app
       - /app/node_modules
+    command: sh -c "npx prisma generate && node index.js"
     depends_on:
       - golang-service
     networks:
       - saracen-network
     restart: unless-stopped
+
 
 networks:
   saracen-network:
