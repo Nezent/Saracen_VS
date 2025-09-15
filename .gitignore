@@ -4,3 +4,5 @@ npm-debug.log
 .DS_Store
 .vscode
 /generated/prisma
+main.exe
+*.log

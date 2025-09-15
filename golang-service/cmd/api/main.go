@@ -38,14 +38,23 @@ func main() {
 		log.Fatal("Failed to ping database:", err)
 	}
 
-	// Initialize repository
+	// Initialize repositories
 	voterRepo := database.NewPostgresVoterRepository(db)
+	voteRepo := database.NewPostgresVoteRepository(db)
+	encryptedBallotRepo := database.NewEncryptedBallotRepository(db)
+	rankedBallotRepo := database.NewRankedBallotRepository(db)
 
-	// Initialize service
+	// Initialize services
 	voterService := application.NewVoterService(voterRepo)
+	voteService := application.NewVoteService(voteRepo, voterRepo)
+	encryptedBallotService := application.NewEncryptedBallotService(encryptedBallotRepo, voterRepo)
+	rankedBallotService := application.NewRankedBallotService(rankedBallotRepo, voterRepo)
 
-	// Initialize handler
+	// Initialize handlers
 	voterHandler := httpHandler.NewVoterHandler(voterService)
+	voteHandler := httpHandler.NewVoteHandler(voteService)
+	encryptedBallotHandler := httpHandler.NewEncryptedBallotHandler(encryptedBallotService)
+	rankedBallotHandler := httpHandler.NewRankedBallotHandler(rankedBallotService)
 
 	// Setup routes
 	router := mux.NewRouter()
@@ -56,6 +65,23 @@ func main() {
 	router.HandleFunc("/api/voters", voterHandler.GetAllVoters).Methods("GET")
 	router.HandleFunc("/api/voters/{voter_id:[0-9]+}", voterHandler.UpdateVoter).Methods("PUT")
 	router.HandleFunc("/api/voters/{voter_id:[0-9]+}", voterHandler.DeleteVoter).Methods("DELETE")
+
+	// Vote routes (Q13, Q14, Q15)
+	router.HandleFunc("/api/votes/timeline", voteHandler.GetVoteTimeline).Methods("GET")
+	router.HandleFunc("/api/votes/weighted", voteHandler.CastWeightedVote).Methods("POST")
+	router.HandleFunc("/api/votes/range", voteHandler.GetRangeVotes).Methods("GET")
+
+	// Encrypted Ballot routes (Q16)
+	router.HandleFunc("/api/ballots/encrypted", encryptedBallotHandler.CreateEncryptedBallot).Methods("POST")
+	router.HandleFunc("/api/ballots/encrypted/{ballot_id}", encryptedBallotHandler.GetEncryptedBallot).Methods("GET")
+	router.HandleFunc("/api/ballots/encrypted", encryptedBallotHandler.GetEncryptedBallotsByElection).Methods("GET")
+
+	// Ranked Ballot routes (Q19)
+	router.HandleFunc("/api/ballots/ranked", rankedBallotHandler.CreateRankedBallot).Methods("POST")
+	router.HandleFunc("/api/ballots/ranked/{ballot_id}", rankedBallotHandler.GetRankedBallot).Methods("GET")
+	router.HandleFunc("/api/ballots/ranked", rankedBallotHandler.GetRankedBallotsByElection).Methods("GET")
+	router.HandleFunc("/api/ballots/ranked/results", rankedBallotHandler.GetSchulzeResults).Methods("GET")
+	router.HandleFunc("/api/ballots/ranked/voter/{voter_id:[0-9]+}", rankedBallotHandler.GetVoterBallots).Methods("GET")
 
 	// Health check endpoint
 	router.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {

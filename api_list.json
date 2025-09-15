@@ -1,275 +1,243 @@
 [
   {
-    "problem": "Q1",
+    "id": "Q1",
     "title": "Create Voter",
     "method": "POST",
     "endpoint": "/api/voters",
     "description": "Register a new voter with unique ID, name, and age validation (minimum 18 years).",
-    "request_body": {
-      "voter_id": 1,
-      "name": "Alice",
-      "age": 22
+    "request_body": { "voter_id": 1, "name": "Alice", "age": 22 },
+    "success": {
+      "status": "218 Created",
+      "body": { "voter_id": 1, "name": "Alice", "age": 22, "has_voted": false }
     },
-    "success_body": {
-      "voter_id": 1,
-      "name": "Alice",
-      "age": 22,
-      "has_voted": false
-    },
-    "error_body": {
-      "message": "voter with id: 1 already exists"
-    }
+    "error_responses": [
+      { "status": "409 Conflict", "body": { "message": "voter with id: 1 already exists" } }
+    ]
   },
   {
-    "problem": "Q2",
+    "id": "Q2",
     "title": "Get Voter Info",
     "method": "GET",
     "endpoint": "/api/voters/{voter_id}",
     "description": "Retrieve detailed information about a specific voter by ID.",
-    "success_body": {
-      "voter_id": 1,
-      "name": "Alice",
-      "age": 22,
-      "has_voted": false
+    "request_body": null,
+    "success": {
+      "status": "222 Found",
+      "body": { "voter_id": 1, "name": "Alice", "age": 22, "has_voted": false }
     },
-    "error_body": {
-      "message": "voter with id: 5 was not found"
-    }
+    "error_responses": [
+      { "status": "417 Expectation Failed", "body": { "message": "voter with id: 5 was not found" } }
+    ]
   },
   {
-    "problem": "Q3",
+    "id": "Q3",
     "title": "List All Voters",
     "method": "GET",
     "endpoint": "/api/voters",
     "description": "Retrieve a complete list of all registered voters.",
-    "success_body": {
-      "voters": [
-        {
-          "voter_id": 1,
-          "name": "Alice",
-          "age": 22
-        },
-        {
-          "voter_id": 2,
-          "name": "Bob",
-          "age": 30
-        }
-      ]
-    }
+    "request_body": null,
+    "success": {
+      "status": "223 Listed",
+      "body": {
+        "voters": [
+          { "voter_id": 1, "name": "Alice", "age": 22 },
+          { "voter_id": 2, "name": "Bob", "age": 30 }
+        ]
+      }
+    },
+    "error_responses": []
   },
   {
-    "problem": "Q4",
+    "id": "Q4",
     "title": "Update Voter Info",
     "method": "PUT",
     "endpoint": "/api/voters/{voter_id}",
     "description": "Update existing voter information with age validation (minimum 18 years).",
-    "request_body": {
-      "name": "Alice Smith",
-      "age": 25
+    "request_body": null,
+    "success": {
+      "status": "224 Updated",
+      "body": { "voter_id": 1, "name": "Alice Smith", "age": 25, "has_voted": false }
     },
-    "success_body": {
-      "voter_id": 1,
-      "name": "Alice Smith",
-      "age": 25,
-      "has_voted": false
-    },
-    "error_body": {
-      "message": "invalid age: 16, must be 18 or older"
-    }
+    "error_responses": [
+      { "status": "422 Unprocessable Entity", "body": { "message": "invalid age: 16, must be 18 or older" } }
+    ]
   },
   {
-    "problem": "Q5",
+    "id": "Q5",
     "title": "Delete Voter",
     "method": "DELETE",
     "endpoint": "/api/voters/{voter_id}",
     "description": "Remove a voter from the system.",
-    "success_body": {
-      "message": "voter with id: 1 deleted successfully"
-    }
+    "request_body": null,
+    "success": {
+      "status": "225 Deleted",
+      "body": { "message": "voter with id: 1 deleted successfully" }
+    },
+    "error_responses": []
   },
   {
-    "problem": "Q6",
+    "id": "Q6",
     "title": "Register Candidate",
     "method": "POST",
     "endpoint": "/api/candidates",
     "description": "Register a new candidate for the election.",
-    "request_body": {
-      "candidate_id": 1,
-      "name": "John Doe",
-      "party": "Green Party"
+    "request_body": { "candidate_id": 1, "name": "John Doe", "party": "Green Party" },
+    "success": {
+      "status": "226 Registered",
+      "body": { "candidate_id": 1, "name": "John Doe", "party": "Green Party", "votes": 0 }
     },
-    "success_body": {
-      "candidate_id": 1,
-      "name": "John Doe",
-      "party": "Green Party",
-      "votes": 0
-    }
+    "error_responses": []
   },
   {
-    "problem": "Q7",
+    "id": "Q7",
     "title": "List Candidates",
     "method": "GET",
     "endpoint": "/api/candidates",
     "description": "Get all registered candidates.",
-    "success_body": {
-      "candidates": [
-        {
-          "candidate_id": 1,
-          "name": "John Doe",
-          "party": "Green Party"
-        },
-        {
-          "candidate_id": 2,
-          "name": "Jane Roe",
-          "party": "Red Party"
-        }
-      ]
-    }
+    "request_body": null,
+    "success": {
+      "status": "227 Listed",
+      "body": {
+        "candidates": [
+          { "candidate_id": 1, "name": "John Doe", "party": "Green Party" },
+          { "candidate_id": 2, "name": "Jane Roe", "party": "Red Party" }
+        ]
+      }
+    },
+    "error_responses": []
   },
   {
-    "problem": "Q8",
+    "id": "Q8",
     "title": "Cast Vote",
     "method": "POST",
     "endpoint": "/api/votes",
     "description": "Cast a vote for a candidate with validation to prevent duplicate voting.",
-    "request_body": {
-      "voter_id": 1,
-      "candidate_id": 2
+    "request_body": { "voter_id": 1, "candidate_id": 2 },
+    "success": {
+      "status": "228 Voted",
+      "body": { "vote_id": 101, "voter_id": 1, "candidate_id": 2, "timestamp": "2025-09-10T10:30:00Z" }
     },
-    "success_body": {
-      "vote_id": 101,
-      "voter_id": 1,
-      "candidate_id": 2,
-      "timestamp": "2025-09-10T10:30:00Z"
-    },
-    "error_body": {
-      "message": "voter with id: 1 has already voted"
-    }
+    "error_responses": [
+      { "status": "423 Locked", "body": { "message": "voter with id: 1 has already voted" } }
+    ]
   },
   {
-    "problem": "Q9",
+    "id": "Q9",
     "title": "Get Candidate Votes",
     "method": "GET",
     "endpoint": "/api/candidates/{candidate_id}/votes",
     "description": "Get the vote count for a specific candidate.",
-    "success_body": {
-      "candidate_id": 2,
-      "votes": 45
-    }
+    "request_body": null,
+    "success": { "status": "229 Counted", "body": { "candidate_id": 2, "votes": 45 } },
+    "error_responses": []
   },
   {
-    "problem": "Q10",
+    "id": "Q10",
     "title": "Filter Candidates by Party",
     "method": "GET",
     "endpoint": "/api/candidates?party={party_name}",
     "description": "Filter candidates by political party.",
-    "success_body": {
-      "candidates": [
-        {
-          "candidate_id": 1,
-          "name": "John Doe",
-          "party": "Green Party"
-        }
-      ]
-    }
+    "request_body": null,
+    "success": {
+      "status": "230 Filtered",
+      "body": {
+        "candidates": [
+          { "candidate_id": 1, "name": "John Doe", "party": "Green Party" }
+        ]
+      }
+    },
+    "error_responses": []
   },
   {
-    "problem": "Q11",
+    "id": "Q11",
     "title": "Voting Results (Leaderboard)",
     "method": "GET",
     "endpoint": "/api/results",
     "description": "Get the complete voting results with candidates ranked by vote count.",
-    "success_body": {
-      "results": [
-        {
-          "candidate_id": 2,
-          "name": "Jane Roe",
-          "votes": 45
-        },
-        {
-          "candidate_id": 1,
-          "name": "John Doe",
-          "votes": 30
-        }
-      ]
-    }
+    "request_body": null,
+    "success": {
+      "status": "231 Results",
+      "body": {
+        "results": [
+          { "candidate_id": 2, "name": "Jane Roe", "votes": 45 },
+          { "candidate_id": 1, "name": "John Doe", "votes": 30 }
+        ]
+      }
+    },
+    "error_responses": []
   },
   {
-    "problem": "Q12",
+    "id": "Q12",
     "title": "Winning Candidate",
     "method": "GET",
     "endpoint": "/api/results/winner",
     "description": "Get the winning candidate(s), handling ties appropriately.",
-    "success_body": {
-      "winners": [
-        {
-          "candidate_id": 1,
-          "name": "John Doe",
-          "votes": 40
-        },
-        {
-          "candidate_id": 2,
-          "name": "Jane Roe",
-          "votes": 40
-        }
-      ]
-    }
+    "request_body": null,
+    "success": {
+      "status": "232 Winner",
+      "body": {
+        "winners": [
+          { "candidate_id": 1, "name": "John Doe", "votes": 40 },
+          { "candidate_id": 2, "name": "Jane Roe", "votes": 40 }
+        ]
+      }
+    },
+    "error_responses": []
   },
   {
-    "problem": "Q13",
+    "id": "Q13",
     "title": "Vote Timeline",
     "method": "GET",
     "endpoint": "/api/votes/timeline?candidate_id={id}",
     "description": "Get the timeline of votes for a specific candidate.",
-    "success_body": {
-      "candidate_id": 2,
-      "timeline": [
-        {
-          "vote_id": 101,
-          "timestamp": "2025-09-10T10:30:00Z"
-        },
-        {
-          "vote_id": 102,
-          "timestamp": "2025-09-10T10:32:00Z"
-        }
-      ]
-    }
+    "request_body": null,
+    "success": {
+      "status": "233 Timeline",
+      "body": {
+        "candidate_id": 2,
+        "timeline": [
+          { "vote_id": 101, "timestamp": "2025-09-10T10:30:00Z" },
+          { "vote_id": 102, "timestamp": "2025-09-10T10:32:00Z" }
+        ]
+      }
+    },
+    "error_responses": []
   },
   {
-    "problem": "Q14",
+    "id": "Q14",
     "title": "Conditional Vote Weight",
     "method": "POST",
     "endpoint": "/api/votes/weighted",
     "description": "Cast a weighted vote based on voter profile update status.",
-    "request_body": {
-      "voter_id": 1,
-      "candidate_id": 2
+    "request_body": { "voter_id": 1, "candidate_id": 2 },
+    "success": {
+      "status": "234 Weighted",
+      "body": { "vote_id": 201, "voter_id": 1, "candidate_id": 2, "weight": 2 }
     },
-    "success_body": {
-      "vote_id": 201,
-      "voter_id": 1,
-      "candidate_id": 2,
-      "weight": 2
-    }
+    "error_responses": []
   },
   {
-    "problem": "Q15",
+    "id": "Q15",
     "title": "Range Vote Queries",
     "method": "GET",
     "endpoint": "/api/votes/range?candidate_id={id}&from={t1}&to={t2}",
     "description": "Get votes for a candidate within a specific time range.",
-    "success_body": {
-      "candidate_id": 2,
-      "from": "2025-09-10T10:00:00Z",
-      "to": "2025-09-10T12:00:00Z",
-      "votes_gained": 42
+    "request_body": null,
+    "success": {
+      "status": "235 Range",
+      "body": {
+        "candidate_id": 2,
+        "from": "2025-09-10T10:00:00Z",
+        "to": "2025-09-10T12:00:00Z",
+        "votes_gained": 42
+      }
     },
-    "error_body": {
-      "message": "invalid interval: from > to"
-    }
+    "error_responses": [
+      { "status": "424 Failed Dependency", "body": { "message": "invalid interval: from > to" } }
+    ]
   },
   {
-    "problem": "Q16",
+    "id": "Q16",
     "title": "End-to-End Verifiable Encrypted Ballot",
     "method": "POST",
     "endpoint": "/api/ballots/encrypted",
@@ -282,18 +250,21 @@
       "nullifier": "hex(keccak256(signal))",
       "signature": "base64(Ed25519 signature over payload)"
     },
-    "success_body": {
-      "ballot_id": "b_7f8c",
-      "status": "accepted",
-      "nullifier": "0x4a1e...",
-      "anchored_at": "2025-09-15T08:30:00Z"
+    "success": {
+      "status": "236 Encrypted",
+      "body": {
+        "ballot_id": "b_7f8c",
+        "status": "accepted",
+        "nullifier": "0x4a1e.",
+        "anchored_at": "2025-09-15T08:30:00Z"
+      }
     },
-    "error_body": {
-      "message": "invalid zk proof"
-    }
+    "error_responses": [
+      { "status": "425 Too Early", "body": { "message": "invalid zk proof" } }
+    ]
   },
   {
-    "problem": "Q17",
+    "id": "Q17",
     "title": "Homomorphic Tally With Verifiable Decryption",
     "method": "POST",
     "endpoint": "/api/results/homomorphic",
@@ -301,46 +272,32 @@
     "request_body": {
       "election_id": "nat-2025",
       "trustee_decrypt_shares": [
-        {
-          "trustee_id": "T1",
-          "share": "base64(...)",
-          "proof": "base64(NIZK)"
-        },
-        {
-          "trustee_id": "T3",
-          "share": "base64(...)",
-          "proof": "base64(NIZK)"
-        },
-        {
-          "trustee_id": "T5",
-          "share": "base64(...)",
-          "proof": "base64(NIZK)"
-        }
+        { "trustee_id": "T1", "share": "base64(.)", "proof": "base64(NIZK)" },
+        { "trustee_id": "T3", "share": "base64(.)", "proof": "base64(NIZK)" },
+        { "trustee_id": "T5", "share": "base64(.)", "proof": "base64(NIZK)" }
       ]
     },
-    "success_body": {
-      "election_id": "nat-2025",
-      "encrypted_tally_root": "0x9ab3...",
-      "candidate_tallies": [
-        {
-          "candidate_id": 1,
-          "votes": 40321
-        },
-        {
-          "candidate_id": 2,
-          "votes": 39997
+    "success": {
+      "status": "237 Tallied",
+      "body": {
+        "election_id": "nat-2025",
+        "encrypted_tally_root": "0x9ab3.",
+        "candidate_tallies": [
+          { "candidate_id": 1, "votes": 40321 },
+          { "candidate_id": 2, "votes": 39997 }
+        ],
+        "decryption_proof": "base64(batch_proof_linking_cipher_aggregate_to_plain_counts)",
+        "transparency": {
+          "ballot_merkle_root": "0x5d2c.",
+          "tally_method": "threshold_paillier",
+          "threshold": "3-of-5"
         }
-      ],
-      "decryption_proof": "base64(batch_proof_linking_cipher_aggregate_to_plain_counts)",
-      "transparency": {
-        "ballot_merkle_root": "0x5d2c...",
-        "tally_method": "threshold_paillier",
-        "threshold": "3-of-5"
       }
-    }
+    },
+    "error_responses": []
   },
   {
-    "problem": "Q18",
+    "id": "Q18",
     "title": "Differential-Privacy Analytics",
     "method": "POST",
     "endpoint": "/api/analytics/dp",
@@ -350,40 +307,33 @@
       "query": {
         "type": "histogram",
         "dimension": "voter_age_bucket",
-        "buckets": [
-          "18-24",
-          "25-34",
-          "35-44",
-          "45-64",
-          "65+"
-        ],
-        "filter": {
-          "has_voted": true
-        }
+        "buckets": ["18-24", "25-34", "35-44", "45-64", "65+"],
+        "filter": { "has_voted": true }
       },
       "epsilon": 0.5,
-      "delta": 1e-06
+      "delta": 1e-6
     },
-    "success_body": {
-      "answer": {
-        "18-24": 10450,
-        "25-34": 20110,
-        "35-44": 18001,
-        "45-64": 17320,
-        "65+": 9022
-      },
-      "noise_mechanism": "gaussian",
-      "epsilon_spent": 0.5,
-      "delta": 1e-06,
-      "remaining_privacy_budget": {
-        "epsilon": 1.0,
-        "delta": 1e-06
-      },
-      "composition_method": "advanced_composition"
-    }
+    "success": {
+      "status": "238 Private",
+      "body": {
+        "answer": {
+          "18-24": 10450,
+          "25-34": 20110,
+          "35-44": 18001,
+          "45-64": 17320,
+          "65+": 9022
+        },
+        "noise_mechanism": "gaussian",
+        "epsilon_spent": 0.5,
+        "delta": 1e-6,
+        "remaining_privacy_budget": { "epsilon": 1.0, "delta": 1e-6 },
+        "composition_method": "advanced_composition"
+      }
+    },
+    "error_responses": []
   },
   {
-    "problem": "Q19",
+    "id": "Q19",
     "title": "Ranked-Choice / Condorcet (Schulze)",
     "method": "POST",
     "endpoint": "/api/ballots/ranked",
@@ -391,22 +341,14 @@
     "request_body": {
       "election_id": "city-rcv-2025",
       "voter_id": 123,
-      "ranking": [
-        3,
-        1,
-        2,
-        5,
-        4
-      ],
+      "ranking": [3, 1, 2, 5, 4],
       "timestamp": "2025-09-10T10:15:00Z"
     },
-    "success_body": {
-      "ballot_id": "rb_2219",
-      "status": "accepted"
-    }
+    "success": { "status": "239 Ranked", "body": { "ballot_id": "rb_2219", "status": "accepted" } },
+    "error_responses": []
   },
   {
-    "problem": "Q20",
+    "id": "Q20",
     "title": "Risk-Limiting Audit (RLA)",
     "method": "POST",
     "endpoint": "/api/audits/plan",
@@ -414,31 +356,23 @@
     "request_body": {
       "election_id": "nat-2025",
       "reported_tallies": [
-        {
-          "candidate_id": 1,
-          "votes": 40321
-        },
-        {
-          "candidate_id": 2,
-          "votes": 39997
-        }
+        { "candidate_id": 1, "votes": 40321 },
+        { "candidate_id": 2, "votes": 39997 }
       ],
       "risk_limit_alpha": 0.05,
       "audit_type": "ballot_polling",
-      "stratification": {
-        "counties": [
-          "A",
-          "B",
-          "C"
-        ]
+      "stratification": { "counties": ["A", "B", "C"] }
+    },
+    "success": {
+      "status": "240 Audited",
+      "body": {
+        "audit_id": "rla_88a1",
+        "initial_sample_size": 1200,
+        "sampling_plan": "base64(csv of county proportions and random seeds)",
+        "test": "kaplan-markov",
+        "status": "planned"
       }
     },
-    "success_body": {
-      "audit_id": "rla_88a1",
-      "initial_sample_size": 1200,
-      "sampling_plan": "base64(csv of county proportions and random seeds)",
-      "test": "kaplan-markov",
-      "status": "planned"
-    }
+    "error_responses": []
   }
 ]
