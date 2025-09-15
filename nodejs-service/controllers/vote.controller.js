@@ -17,12 +17,12 @@ export const castVote = async (req, res) => {
         }
       });
       const candidate = await prisma.candidate.findFirst({ where: { candidate_id } });
-      const voter = await prisma.voter.findFirst({where: {voter_id}});
+      const voter = await prisma.voter.findFirst({ where: { voter_id } });
       let weight;
-      if(voter.age >= 18 && voter.age < 30) weight = 1;
-      else if(voter.age >= 30 && voter.age < 40) weight = 2;
-      else if(voter.age >= 40 && voter.age < 50) weight = 3;
-      else if(voter.age > 50) weight = 4;
+      if (voter.age >= 18 && voter.age < 30) weight = 1;
+      else if (voter.age >= 30 && voter.age < 40) weight = 2;
+      else if (voter.age >= 40 && voter.age < 50) weight = 3;
+      else if (voter.age > 50) weight = 4;
       await prisma.candidate.update({
         where: {
           candidate_id,
@@ -33,6 +33,7 @@ export const castVote = async (req, res) => {
       })
       return { newVote };
     })
+
     res.status(200).json(result.newVote);
   } catch (error) {
     console.log(error);
@@ -44,10 +45,14 @@ export const getCandidateVotes = async (req, res) => {
     const { candidate_id } = req.params;
     const candidateVotes = await prisma.vote.findMany({
       where: {
-        candidate_id,
+        candidate_id: parseInt(candidate_id),
+      },
+      select: {
+        candidate_id: true,
       }
     });
-    res.status(200).json(candidateVotes)
+    const candidate = await prisma.candidate.findFirst({ where: { candidate_id: parseInt(candidate_id) } })
+    res.status(200).json({ candidate_id, votes: candidate.votes_count });
   } catch (error) {
     console.log(error);
   }
@@ -71,7 +76,7 @@ export const votingResults = async (req, res) => {
   try {
     const results = await prisma.candidate.findMany({
       orderBy: {
-        votes: 'desc'
+        votes_count: "desc"
       }
     });
     res.status(200).json({ results });
@@ -91,12 +96,12 @@ export const winningCandidate = async (req, res) => {
     const maxVotes = maxVotesCandidate._max.votes_count;
     const winners = await prisma.candidate.findMany({
       where: {
-        votes: maxVotes
+        votes_count: maxVotes
       },
       select: {
         candidate_id: true,
         name: true,
-        votes: true
+        votes_count: true
       },
       orderBy: {
         name: 'asc'

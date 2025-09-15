@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -22,7 +16,9 @@ model Voter {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  votes Vote[]
+  votes            Vote[]
+  rankedBallots    RankedBallot[]
+  encryptedBallots EncryptedBallot[]
 
   @@map("voter")
 }
@@ -33,7 +29,8 @@ model Candidate {
   party        String
   votes_count  Int    @default(0)
 
-  votes Vote[]
+  votes          Vote[]
+  ballotRankings BallotRanking[]
 
   @@map("candidate")
 }
@@ -51,4 +48,48 @@ model Vote {
   candidate Candidate @relation(fields: [candidate_id], references: [candidate_id])
 
   @@map("votes")
+}
+
+// ==================== New Models ====================
+
+model RankedBallot {
+  ballot_id   String   @id
+  election_id String
+  voter_id    Int
+  timestamp   DateTime
+  status      String   @default("accepted")
+
+  voter    Voter           @relation(fields: [voter_id], references: [voter_id])
+  rankings BallotRanking[]
+
+  @@map("ranked_ballots")
+}
+
+model BallotRanking {
+  id            Int    @id @default(autoincrement())
+  ballot_id     String
+  candidate_id  Int
+  rank_position Int
+
+  ballot    RankedBallot @relation(fields: [ballot_id], references: [ballot_id], onDelete: Cascade)
+  candidate Candidate    @relation(fields: [candidate_id], references: [candidate_id])
+
+  @@map("ballot_rankings")
+}
+
+model EncryptedBallot {
+  ballot_id    String   @id
+  election_id  String
+  voter_id     Int
+  ciphertext   String
+  zk_proof     String
+  voter_pubkey String
+  nullifier    String   @unique
+  signature    String
+  status       String   @default("accepted")
+  anchored_at  DateTime @default(now())
+
+  voter Voter @relation(fields: [voter_id], references: [voter_id])
+
+  @@map("encrypted_ballots")
 }
