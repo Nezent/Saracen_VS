@@ -7,7 +7,7 @@ services:
     build:
       context: ./golang-service
       dockerfile: Dockerfile
-    container_name: saracen-go-api
+    container_name: golang-service
     ports:
       - "8080:8080"
     environment:
@@ -20,16 +20,24 @@ services:
 
   # Node.js Service
   node-service:
-    build: .
-    container_name: hack-the-ai
+    build:
+      context: ./nodejs-service
+      dockerfile: Dockerfile
+    container_name: nodejs-service
     ports:
       - "8000:8000"
     environment:
-      DATABASE_URL: "postgresql://neondb_owner:npg_RCKnZ94HUIzV@ep-round-bar-a1pyj7b4-pooler.ap-southeast-1.aws.neon.tech/hack-the-ai?sslmode=require&channel_binding=require"
-      PORT: 8000
+      - PORT=8000
+      - GOLANG_API_URL=http://golang-service:8080
+      - DATABASE_URL=postgresql://neondb_owner:npg_RCKnZ94HUIzV@ep-round-bar-a1pyj7b4-pooler.ap-southeast-1.aws.neon.tech/hack-the-ai?sslmode=require&channel_binding=require
     volumes:
       - .:/app
       - /app/node_modules
+    depends_on:
+      - golang-service
+    networks:
+      - saracen-network
+    restart: unless-stopped
 
 networks:
   saracen-network:
