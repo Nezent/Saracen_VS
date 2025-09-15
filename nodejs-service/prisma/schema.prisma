@@ -24,7 +24,7 @@ model Voter {
 
   votes Vote[]
 
-  @@map("users")
+  @@map("voter")
 }
 
 model Candidate {
@@ -34,6 +34,8 @@ model Candidate {
   votes_count  Int    @default(0)
 
   votes Vote[]
+
+  @@map("candidate")
 }
 
 model Vote {
