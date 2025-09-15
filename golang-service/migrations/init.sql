@@ -39,6 +39,20 @@ CREATE TABLE "public"."candidate" (
     CONSTRAINT "candidate_pkey" PRIMARY KEY ("candidate_id")
 );
 
+
+-- CreateTable
+CREATE TABLE "public"."votes" (
+    "vote_id" SERIAL NOT NULL,
+    "voter_id" INTEGER NOT NULL,
+    "candidate_id" INTEGER NOT NULL,
+    "weight" INTEGER NOT NULL DEFAULT 1,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "votes_pkey" PRIMARY KEY ("vote_id")
+);
+
+
 -- CreateIndex
 CREATE UNIQUE INDEX "voter_voter_id_key" ON "public"."voter"("voter_id");
 
