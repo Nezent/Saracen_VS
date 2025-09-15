@@ -1,21 +1,6 @@
 version: '3.8'
 
 services:
-  # PostgreSQL Database
-  postgres:
-    image: postgres:15-alpine
-    container_name: saracen-db
-    environment:
-      POSTGRES_DB: saracen_voting
-      POSTGRES_USER: saracen_user
-      POSTGRES_PASSWORD: saracen_pass
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-      - ./database/migrations:/docker-entrypoint-initdb.d
-    networks:
-      - saracen-network
 
   # Golang Service
   golang-service:
@@ -41,46 +26,17 @@ services:
     restart: unless-stopped
 
   # Node.js Service
-  nodejs-service:
-    build:
-      context: ./nodejs-service
-      dockerfile: Dockerfile
-    container_name: saracen-node-api
+  node-service:
+    build: .
+    container_name: hack-the-ai
     ports:
-      - "3000:3000"
+      - "8000:8000"
     environment:
-      - DB_HOST=postgres
-      - DB_PORT=5432
-      - DB_NAME=saracen_voting
-      - DB_USER=saracen_user
-      - DB_PASSWORD=saracen_pass
-      - SERVER_PORT=3000
-      - NODE_ENV=development
-    depends_on:
-      - postgres
-    networks:
-      - saracen-network
+      DATABASE_URL: "postgresql://neondb_owner:npg_RCKnZ94HUIzV@ep-round-bar-a1pyj7b4-pooler.ap-southeast-1.aws.neon.tech/hack-the-ai?sslmode=require&channel_binding=require"
+      PORT: 8000
     volumes:
-      - ./nodejs-service:/app
+      - .:/app
       - /app/node_modules
-    restart: unless-stopped
-
-  # Optional: pgAdmin for database management
-  pgadmin:
-    image: dpage/pgadmin4:latest
-    container_name: saracen-pgadmin
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@saracen.local
-      PGADMIN_DEFAULT_PASSWORD: admin123
-    ports:
-      - "8081:80"
-    depends_on:
-      - postgres
-    networks:
-      - saracen-network
-
-volumes:
-  postgres_data:
 
 networks:
   saracen-network:
