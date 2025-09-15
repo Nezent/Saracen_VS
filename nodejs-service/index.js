@@ -1,6 +1,9 @@
 import express from 'express';
 import cors from "cors";
 import dotenv from "dotenv";
+import candidateRoutes from './routes/candidate.routes.js';
+import voteRoutes from "./routes/vote.routes.js";
+import resultRoutes from "./routes/results.routes.js";
 
 dotenv.config();
 const app = express();
@@ -9,6 +12,9 @@ app.use(express.json());
 const PORT = process.env.PORT || 8000;
 
 
+app.use('/api/candidates', candidateRoutes);
+app.use('/api/votes', voteRoutes);
+app.use('/api/results', resultRoutes);
 app.get("/", (req, res) => {
   res.send("Hackathon API is runnings");
 });
