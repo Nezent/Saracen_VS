@@ -1,0 +1,326 @@
+[
+  {
+    "endpoint": "/api/voters",
+    "method": "POST",
+    "description": "Create Voter",
+    "request_body": {
+      "voter_id": 1,
+      "name": "Alice",
+      "age": 22
+    },
+    "success_response": {
+      "voter_id": 1,
+      "name": "Alice",
+      "age": 22,
+      "has_voted": false
+    },
+    "error_response": {
+      "message": "voter with id: 1 already exists"
+    }
+  },
+  {
+    "endpoint": "/api/voters/1",
+    "method": "GET",
+    "description": "Get Voter Info",
+    "request_body": null,
+    "success_response": {
+      "voter_id": 1,
+      "name": "Alice",
+      "age": 22,
+      "has_voted": false
+    },
+    "error_response": {
+      "message": "voter with id: 5 was not found"
+    }
+  },
+  {
+    "endpoint": "/api/voters",
+    "method": "GET",
+    "description": "List All Voters",
+    "request_body": null,
+    "success_response": {
+      "voters": [
+        {
+          "voter_id": 1,
+          "name": "Alice",
+          "age": 22
+        },
+        {
+          "voter_id": 2,
+          "name": "Bob",
+          "age": 30
+        }
+      ]
+    },
+    "error_response": null
+  },
+  {
+    "endpoint": "/api/voters/1",
+    "method": "PUT",
+    "description": "Update Voter Info",
+    "request_body": {
+      "name": "Alice Smith",
+      "age": 25
+    },
+    "success_response": {
+      "voter_id": 1,
+      "name": "Alice Smith",
+      "age": 25,
+      "has_voted": false
+    },
+    "error_response": {
+      "message": "invalid age: 16, must be 18 or older"
+    }
+  },
+  {
+    "endpoint": "/api/voters/1",
+    "method": "DELETE",
+    "description": "Delete Voter",
+    "request_body": null,
+    "success_response": {
+      "message": "voter with id: 1 deleted successfully"
+    },
+    "error_response": null
+  },
+  {
+    "endpoint": "/api/candidates",
+    "method": "POST",
+    "description": "Register Candidate",
+    "request_body": {
+      "candidate_id": 1,
+      "name": "John Doe",
+      "party": "Green Party"
+    },
+    "success_response": {
+      "candidate_id": 1,
+      "name": "John Doe",
+      "party": "Green Party"
+    },
+    "error_response": {
+      "message": "candidate with id: 1 already exists"
+    }
+  },
+  {
+    "endpoint": "/api/candidates",
+    "method": "GET",
+    "description": "List Candidates",
+    "request_body": null,
+    "success_response": {
+      "candidates": [
+        {
+          "candidate_id": 1,
+          "name": "John Doe",
+          "party": "Green Party"
+        },
+        {
+          "candidate_id": 2,
+          "name": "Jane Smith",
+          "party": "Blue Party"
+        }
+      ]
+    },
+    "error_response": null
+  },
+  {
+    "endpoint": "/api/candidates/1",
+    "method": "GET",
+    "description": "Get Candidate",
+    "request_body": null,
+    "success_response": {
+      "candidate_id": 1,
+      "name": "John Doe",
+      "party": "Green Party"
+    },
+    "error_response": {
+      "message": "candidate with id: 99 was not found"
+    }
+  },
+  {
+    "endpoint": "/api/candidates/1",
+    "method": "PUT",
+    "description": "Update Candidate",
+    "request_body": {
+      "name": "Johnathan Doe",
+      "party": "Green Party"
+    },
+    "success_response": {
+      "candidate_id": 1,
+      "name": "Johnathan Doe",
+      "party": "Green Party"
+    },
+    "error_response": {
+      "message": "party \"Unknown\" is not allowed"
+    }
+  },
+  {
+    "endpoint": "/api/candidates/1",
+    "method": "DELETE",
+    "description": "Delete Candidate",
+    "request_body": null,
+    "success_response": {
+      "message": "candidate with id: 1 deleted successfully"
+    },
+    "error_response": null
+  },
+  {
+    "endpoint": "/api/ballots",
+    "method": "POST",
+    "description": "Cast Ballot",
+    "request_body": {
+      "voter_id": 1,
+      "candidate_id": 2
+    },
+    "success_response": {
+      "ballot_id": "bal_1001",
+      "voter_id": 1,
+      "candidate_id": 2,
+      "status": "accepted"
+    },
+    "error_response": {
+      "message": "voter with id: 1 has already voted"
+    }
+  },
+  {
+    "endpoint": "/api/ballots",
+    "method": "GET",
+    "description": "List Ballots",
+    "request_body": null,
+    "success_response": {
+      "ballots": [
+        {
+          "ballot_id": "bal_1001",
+          "voter_id": 1,
+          "candidate_id": 2
+        }
+      ]
+    },
+    "error_response": null
+  },
+  {
+    "endpoint": "/api/results",
+    "method": "GET",
+    "description": "Get Current Results",
+    "request_body": null,
+    "success_response": {
+      "total_ballots": 1570,
+      "results": [
+        {
+          "candidate_id": 1,
+          "name": "John Doe",
+          "votes": 780
+        },
+        {
+          "candidate_id": 2,
+          "name": "Jane Smith",
+          "votes": 790
+        }
+      ]
+    },
+    "error_response": null
+  },
+  {
+    "endpoint": "/api/audit/request",
+    "method": "POST",
+    "description": "Request an Audit",
+    "request_body": {
+      "type": "rla",
+      "risk_limit": 0.1
+    },
+    "success_response": {
+      "audit_id": "rla_88a1",
+      "status": "queued"
+    },
+    "error_response": {
+      "message": "risk_limit must be between 0 and 1"
+    }
+  },
+  {
+    "endpoint": "/api/audit/sample",
+    "method": "POST",
+    "description": "Upload Sample Plan",
+    "request_body": {
+      "audit_id": "rla_88a1",
+      "sample": [
+        101,
+        222,
+        345
+      ]
+    },
+    "success_response": {
+      "audit_id": "rla_88a1",
+      "accepted": true
+    },
+    "error_response": {
+      "message": "audit rla_88a1 not found"
+    }
+  },
+  {
+    "endpoint": "/api/audit/report",
+    "method": "POST",
+    "description": "Submit Audit Report",
+    "request_body": {
+      "audit_id": "rla_88a1",
+      "findings": "no discrepancies",
+      "p_value": 0.042
+    },
+    "success_response": {
+      "audit_id": "rla_88a1",
+      "status": "completed",
+      "passed": true
+    },
+    "error_response": {
+      "message": "p_value must be between 0 and 1"
+    }
+  },
+  {
+    "endpoint": "/api/health",
+    "method": "GET",
+    "description": "Health Check",
+    "request_body": null,
+    "success_response": {
+      "status": "ok",
+      "uptime_seconds": 12345
+    },
+    "error_response": null
+  },
+  {
+    "endpoint": "/api/admin/reset",
+    "method": "POST",
+    "description": "Reset System",
+    "request_body": {
+      "confirm": true
+    },
+    "success_response": {
+      "message": "system reset initiated"
+    },
+    "error_response": {
+      "message": "confirmation required"
+    }
+  },
+  {
+    "endpoint": "/api/audit/plan",
+    "method": "POST",
+    "description": "Create Audit Plan",
+    "request_body": {
+      "audit_id": "rla_88a1",
+      "initial_sample_size": 1200,
+      "sampling_plan": "base64(csv of county proportions and random seeds)",
+      "test": "kaplan-markov",
+      "ballot_manifest": {
+        "counties": [
+          "A",
+          "B",
+          "C"
+        ]
+      }
+    },
+    "success_response": {
+      "audit_id": "rla_88a1",
+      "initial_sample_size": 1200,
+      "sampling_plan": "base64(csv of county proportions and random seeds)",
+      "test": "kaplan-markov",
+      "status": "planned"
+    },
+    "error_response": null
+  }
+]
